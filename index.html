@@ -3,27 +3,34 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Our family Christmas wishlists. Find a gift for your Secret Santa person, or add your own ideas.">
-<meta name="robots" content="noindex, nofollow"><meta name="theme-color" content="#741522">
-<title>Our Family Christmas Wishlists</title>
+<meta name="robots" content="noindex, nofollow"><meta name="theme-color" content="#213e34">
+<meta property="og:title" content="Our Family Christmas Wishlist">
+<meta property="og:description" content="A little inspiration for the people we love. Browse our family’s Christmas wishes and add your own.">
+<meta property="og:type" content="website">
+<title>Our Family Christmas Wishlist</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/family.css"><script type="module" src="/app.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#family">Skip to wishlists</a>
+<nav class="site-nav" aria-label="Main navigation"><a class="wordmark" href="/">Our family <span>Christmas wishlist</span></a><button id="share-list" class="share-button" type="button">Share wishlist <span aria-hidden="true">↗</span></button></nav>
+<p id="share-status" class="share-status" role="status"></p>
 <header class="hero family-hero"><div class="hero__inner">
-<p class="eyebrow">Christmas 2026 · Secret Santa</p>
-<h1>A little less guessing.<br>A little more giving.</h1>
-<p class="hero__copy">Our family’s wishlists, all in one place. Find your person, browse their ideas, or share a few things you’d love.</p>
+<div class="holiday-seal" aria-hidden="true">✧</div>
+<p class="eyebrow">Made for our people · Christmas 2026</p>
+<h1>Our Family<br><em>Christmas Wishlist</em></h1>
+<p class="hero__copy">A little inspiration for the people we love.<br>All our wishes, together in one place.</p>
 <div class="hero-actions"><a class="hero__button" href="#family">Find your person ↓</a><button class="outline-button" type="button" data-add>Add to my wishlist +</button></div>
+<p class="hero-footnote">For Secret Santa. For little surprises. For each other.</p>
 </div></header>
 <main class="page-shell family-shell">
 <section id="family" aria-labelledby="family-heading">
-<div class="section-heading"><div><p class="eyebrow">All together</p><h2 id="family-heading">Who are we shopping for?</h2></div><p>Choose a name to see their wishlist.</p></div>
+<div class="section-heading"><div><p class="eyebrow">01 / Our people</p><h2 id="family-heading">Someone you love.</h2></div><p>Pick a name. Find a little inspiration.</p></div>
 <nav id="people" class="people-grid" aria-label="Family wishlists"></nav>
 </section>
 <section id="wishlist" class="wishlist-section" aria-labelledby="list-title">
-<div class="section-heading list-heading"><div><p class="eyebrow">The wishlist</p><h2 id="list-title">Everyone’s ideas</h2></div>
+<div class="section-heading list-heading"><div><p class="eyebrow">02 / Little wishes</p><h2 id="list-title">Everyone’s ideas</h2></div>
 <div class="list-tools"><label for="sort">Sort by</label><select id="sort"><option value="price">Price: low to high</option><option value="price-desc">Price: high to low</option></select><button class="small-button" id="refresh" type="button">Refresh</button><button class="small-button primary" type="button" data-add>Add a gift +</button></div></div>
 <p id="load-status" class="load-status" role="status">Loading everyone’s ideas…</p>
 <p class="price-note">Listed prices may change. Check the shop for the latest price.</p>
@@ -43,5 +50,5 @@
 <div class="honeypot" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
 <p class="form-note">Gift ideas are visible to anyone with the site link.</p><p id="form-status" role="status"></p><button class="submit-button" id="save-gift" type="submit">Add to wishlist</button>
 </form></dialog>
-<footer><p>A little wishlist. A lot of love. ♥</p><p>Secret Santa or just because—these are ideas, never obligations.</p><button id="export" class="footer-link" type="button">Download everyone’s lists</button><p id="export-status" role="status"></p><small>Some Amazon links may be affiliate links.</small></footer>
+<footer><span class="footer-star" aria-hidden="true">✧</span><p>The best part is being together.</p><p>A few wishes for Christmas. A whole lot of love, always.<br>These are ideas, never obligations.</p><button id="export" class="footer-link" type="button">Download everyone’s lists</button><p id="export-status" role="status"></p><small>Our Family Christmas Wishlist · 2026<br>Some Amazon links may be affiliate links.</small></footer>
 </body></html>

@@ -141,6 +141,17 @@ $('#gift-form').addEventListener('submit', async e => {
 });
 $('#sort').addEventListener('change', render);
 $('#refresh').addEventListener('click', refresh);
+$('#share-list').addEventListener('click', async () => {
+  const url = new URL(location.pathname, location.origin);
+  if (selected !== 'all') { url.searchParams.set('person', selected); url.hash = 'wishlist'; }
+  const title = selected === 'all' ? 'Our Family Christmas Wishlist' : names[selected] + '’s Christmas Wishlist';
+  try {
+    if (navigator.share) await navigator.share({ title, text: 'A little inspiration for Christmas.', url: url.href });
+    else { await navigator.clipboard.writeText(url.href); $('#share-status').textContent = 'Wishlist link copied—ready to send to the family.'; }
+  } catch (error) {
+    if (error.name !== 'AbortError') $('#share-status').textContent = 'Copy the link from your browser’s address bar to share this wishlist.';
+  }
+});
 $('#export').addEventListener('click', async () => {
   $('#export').disabled = true;
   try {
