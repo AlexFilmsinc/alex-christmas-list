@@ -152,17 +152,6 @@ $('#share-list').addEventListener('click', async () => {
     if (error.name !== 'AbortError') $('#share-status').textContent = 'Copy the link from your browser’s address bar to share this wishlist.';
   }
 });
-$('#export').addEventListener('click', async () => {
-  $('#export').disabled = true;
-  try {
-    const latest = await api();
-    const data = { exportedAt: new Date().toISOString(), family, gifts: [...curated, ...latest.gifts] };
-    const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
-    const link = node('a'); link.href = url; link.download = 'family-wishlists.json'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
-    $('#export-status').textContent = 'Downloaded. You can share this file with Codex to review everyone’s ideas.';
-  } catch (e) { $('#export-status').textContent = e.message; }
-  finally { $('#export').disabled = false; }
-});
 try {
   const response = await fetch('/data/curated.json'); if (!response.ok) throw new Error();
   curated = await response.json();
