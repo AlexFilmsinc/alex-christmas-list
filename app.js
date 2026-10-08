@@ -83,9 +83,12 @@ function render() {
   renderPeople();
   $('#list-title').textContent = selected === 'all' ? 'Everyone’s ideas' : names[selected] + '’s wishlist';
   const gifts = allGifts().filter(g => selected === 'all' || g.person === selected);
-  gifts.sort($('#sort').value === 'newest'
-    ? (a, b) => (b.createdAt || '').localeCompare(a.createdAt || '')
-    : (a, b) => (a.price ?? Infinity) - (b.price ?? Infinity));
+  const descending = $('#sort').value === 'price-desc';
+  gifts.sort((a, b) => {
+    if (a.price == null) return b.price == null ? 0 : 1;
+    if (b.price == null) return -1;
+    return descending ? b.price - a.price : a.price - b.price;
+  });
   $('#gift-list').replaceChildren(...gifts.map(card));
   $('#empty-state').hidden = gifts.length > 0 || loading || loadError;
 }
