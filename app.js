@@ -22,7 +22,7 @@ function selectPerson(id) {
   url.hash = 'wishlist';
   history.replaceState(null, '', url);
   render();
-  $('#wishlist').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  $('#wishlist').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
 }
 function renderPeople() {
   const target = $('#people');
@@ -89,7 +89,11 @@ function render() {
     if (b.price == null) return -1;
     return descending ? b.price - a.price : a.price - b.price;
   });
-  $('#gift-list').replaceChildren(...gifts.map(card));
+  $('#gift-list').replaceChildren(...gifts.map((gift, index) => {
+    const element = card(gift);
+    element.style.setProperty('--reveal-delay', Math.min(index, 5) * 45 + 'ms');
+    return element;
+  }));
   $('#empty-state').hidden = gifts.length > 0 || loading || loadError;
 }
 async function api(method = 'GET', body) {

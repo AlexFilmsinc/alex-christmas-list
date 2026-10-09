@@ -122,10 +122,11 @@ form textarea { resize: vertical; }
   dialog { padding: 22px; }
 }
 @media (prefers-reduced-motion: reduce) { .person-button { transition: none; } }
-.christmas-secret { max-width: 420px; margin: 30px auto 0; border-top: 1px solid #526959; padding-top: 22px; }
-.christmas-secret summary { display: inline-block; cursor: pointer; color: #d8c799; font-size: .78rem; letter-spacing: .04em; list-style: none; padding: 12px; border-radius: 8px; }
+.christmas-secret { max-width: 420px; margin: 24px auto 0; }
+.christmas-secret summary { display: inline-grid; place-items: center; width: 44px; height: 44px; cursor: pointer; color: #b9bda0; list-style: none; border-radius: 50%; transition: color .25s, background .25s; }
 .christmas-secret summary::-webkit-details-marker { display: none; }
-.christmas-secret summary > span { display: inline-block; margin-right: 7px; font-size: 1.1rem; }
+.christmas-secret summary > span { display: inline-block; font-size: 1.3rem; transition: transform .5s ease; }
+.christmas-secret summary:hover, .christmas-secret summary:focus-visible { color: #fff0b9; background: #ffffff08; }
 .christmas-secret[open] summary > span { transform: rotate(45deg); }
 .secret-note { padding: 24px 20px; margin-top: 10px; border: 1px solid #62715d; border-radius: 12px; background: #294637; color: #dce1d2; font-size: .82rem; line-height: 1.8; }
 .secret-label { color: #d8c799; text-transform: uppercase; font-size: .58rem; letter-spacing: .18em; }
@@ -133,3 +134,31 @@ footer .secret-note p { font-family: 'Playfair Display', Georgia, serif; font-si
 footer .creator-credit { margin: 30px 0 0; font-size: .7rem; letter-spacing: .08em; color: #bbc9b9; }
 .creator-credit strong { font-weight: 600; color: #fff9e9; }
 .creator-credit > span { margin-left: 5px; color: #d8c799; }
+.heist-signature { display: block; margin-top: 18px; color: #d8c799; letter-spacing: .3em; }
+@keyframes wish-arrive { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes secret-arrive { from { opacity: 0; transform: translateY(-6px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@media (prefers-reduced-motion: no-preference) {
+  .hero__inner > * { animation: wish-arrive .65s ease-out both; }
+  .hero__inner h1 { animation-delay: .08s; }
+  .hero__copy { animation-delay: .16s; }
+  .hero-actions { animation-delay: .24s; }
+  .hero-footnote { animation-delay: .3s; }
+  .gift-card { animation: wish-arrive .4s ease-out backwards; animation-delay: var(--reveal-delay, 0ms); transition: box-shadow .25s, border-color .25s; }
+  .gift-card__image img { transition: transform .45s ease; }
+  .person-button { transition: transform .2s, background .2s, border-color .2s, box-shadow .2s; }
+  .person-initial { transition: transform .25s; }
+  .hero__button, .outline-button, .small-button, .share-button, .submit-button { transition: transform .2s, box-shadow .2s, background .2s; }
+  dialog[open] { animation: secret-arrive .25s ease-out; }
+  .christmas-secret[open] .secret-note, .empty-state { animation: secret-arrive .4s ease-out; }
+  @media (hover: hover) {
+    .person-button:hover { transform: translateY(-3px); box-shadow: 0 8px 20px #243d3310; }
+    .person-button:hover .person-initial { transform: rotate(-7deg); }
+    .gift-card:hover { border-color: #c5cebe; box-shadow: 0 12px 30px #243d3310; }
+    .gift-card:hover .gift-card__image img { transform: scale(1.035); }
+    .hero__button:hover, .outline-button:hover, .small-button:hover, .share-button:hover { transform: translateY(-2px); }
+  }
+  button:active, .hero__button:active { transform: scale(.98); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .christmas-secret summary, .christmas-secret summary > span { transition: none; }
+}
