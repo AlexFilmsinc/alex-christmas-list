@@ -13,27 +13,30 @@ button:disabled { cursor: wait; opacity: .65; }
 :focus-visible { outline: 3px solid #ba8740; outline-offset: 4px; }
 .skip-link { position: absolute; top: -80px; left: 16px; padding: 12px; background: white; z-index: 20; }
 .skip-link:focus { top: 16px; }
-.family-hero { min-height: 560px; padding: 46px 24px 62px; color: var(--ink); background: radial-gradient(ellipse at 50% 30%, #fffdf7, #f2f0e3); border: 1px solid #dce0d2; margin: 0 24px; border-radius: 150px 150px 10px 10px; position: relative; overflow: hidden; }
-.family-hero::before, .family-hero::after { content: '✧'; position: absolute; color: #a7865090; font-size: 7rem; pointer-events: none; top: 31%; }
+.family-hero { min-height: 560px; padding: 46px 24px 62px; color: #fffaf0; background: radial-gradient(ellipse at 50% 12%, #98515b55, transparent 65%), linear-gradient(135deg, #501019, #791827); border: 1px solid #781d2b; margin: 0 24px; border-radius: 150px 150px 10px 10px; position: relative; overflow: hidden; }
+.family-hero::before, .family-hero::after { content: '✧'; position: absolute; color: #dfc28e99; font-size: 7rem; pointer-events: none; top: 31%; }
 .family-hero::before { left: 8%; transform: rotate(-15deg); }
 .family-hero::after { right: 8%; transform: rotate(15deg); }
-.holiday-seal { width: 46px; height: 46px; border: 1px solid #ad8d58; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 24px; font-size: 1.8rem; color: #93713e; }
+.holiday-seal { width: 46px; height: 46px; border: 1px solid #d8b986; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 24px; font-size: 1.8rem; color: #ebd5ad; }
 .family-hero h1 { max-width: 900px; font-size: clamp(2.7rem, 5.7vw, 5.1rem); font-weight: 600; line-height: 1.07; letter-spacing: -.045em; }
-.family-hero h1 em { color: #823b40; font-weight: 600; }
-.family-hero .eyebrow { color: #69765e; font-size: .65rem; letter-spacing: .2em; margin-bottom: 23px; }
-.family-hero .hero__copy { color: var(--muted); font-size: 1rem; line-height: 1.8; }
-.family-hero .hero__button { background: var(--red); color: white; padding: 14px 24px; font-size: .85rem; }
-.hero-footnote { font-size: .69rem; color: #787c6e; margin: 25px 0 0; letter-spacing: .04em; }
+.family-hero h1 em { color: #efd9b2; font-weight: 600; }
+.family-hero .eyebrow { color: #edd3d3; font-size: .65rem; letter-spacing: .2em; margin-bottom: 23px; }
+.family-hero .hero__copy { color: #f3e4df; font-size: 1rem; line-height: 1.8; }
+.family-hero .hero__button { background: #fffaf0; color: #641421; padding: 14px 24px; font-size: .85rem; }
+.hero-footnote { font-size: .69rem; color: #e3c4c2; margin: 25px 0 0; letter-spacing: .04em; }
 .family-hero .hero__inner { max-width: 920px; }
 .hero-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
-.outline-button { padding: 12px 20px; border: 1px solid #c5cebe; border-radius: 999px; background: transparent; color: var(--ink); font-weight: 500; font-size: .85rem; }
+.outline-button { padding: 12px 20px; border: 1px solid #bc8188; border-radius: 999px; background: #ffffff05; color: #fffaf0; font-weight: 500; font-size: .85rem; }
 .family-shell { padding-top: 56px; }
 .family-shell h2 { font-size: clamp(1.9rem, 3.6vw, 2.75rem); }
 #family, #wishlist { scroll-margin-top: 24px; }
 .people-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
 .person-button { display: flex; flex-direction: column; align-items: center; padding: 22px 20px; border-radius: 12px; border: 1px solid var(--line); color: var(--ink); background: #fffdf8; text-align: center; gap: 4px; transition: background .18s, border-color .18s; }
 .person-button:hover { border-color: var(--red); }
-.person-button[aria-pressed="true"] { background: var(--red); color: white; border-color: var(--red); }
+.person-button[aria-pressed="true"] { background: #741522; color: #fffaf0; border-color: #741522; }
+.family-shell .eyebrow { color: #741522; }
+.person-button:nth-child(3n + 2):not([aria-pressed="true"]) { background: #f4eae7; border-color: #e4cfca; }
+.person-button:nth-child(3n):not([aria-pressed="true"]) { background: #eef1e8; border-color: #d7dfd0; }
 .person-initial { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--red-soft); color: var(--red); font-family: 'Playfair Display', Georgia, serif; font-size: 1.1rem; margin-bottom: 8px; font-weight: 600; }
 .person-button:nth-child(3n) .person-initial { background: #f3e5df; color: #823b40; }
 .person-button:nth-child(3n + 1) .person-initial { background: #f2ead7; color: #75603a; }
