@@ -181,12 +181,11 @@ $('#refresh').addEventListener('click', refresh);
 $('#share-list').addEventListener('click', async () => {
   const url = new URL(location.pathname, location.origin);
   if (query || location.search) { url.searchParams.set('person', selected); url.hash = 'wishlist'; }
-  const title = url.search ? names[selected] + '’s Christmas Wishlist' : 'Our Family Christmas Wishlist';
   try {
-    if (navigator.share) await navigator.share({ title, text: 'A little inspiration for Christmas.', url: url.href });
-    else { await navigator.clipboard.writeText(url.href); $('#share-status').textContent = 'Wishlist link copied—ready to send to the family.'; }
-  } catch (error) {
-    if (error.name !== 'AbortError') $('#share-status').textContent = 'Copy the link from your browser’s address bar to share this wishlist.';
+    await navigator.clipboard.writeText(url.href);
+    $('#share-status').textContent = 'Link copied.';
+  } catch {
+    $('#share-status').textContent = 'Couldn’t copy automatically. Copy the link from your browser’s address bar.';
   }
 });
 try {

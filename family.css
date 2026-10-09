@@ -135,6 +135,9 @@ footer .creator-credit { margin: 30px 0 0; font-size: .7rem; letter-spacing: .08
 .creator-credit strong { font-weight: 600; color: #fff9e9; }
 .creator-credit > span { margin-left: 5px; color: #d8c799; }
 .heist-signature { display: block; margin-top: 18px; color: #d8c799; letter-spacing: .3em; }
+.simple-footer { padding: 28px 24px; }
+.simple-footer .christmas-secret { margin-top: 8px; }
+.simple-footer .creator-credit { margin: 8px 0 0; font-family: 'DM Sans', sans-serif; font-size: .7rem; line-height: 1.5; color: #bbc9b9; }
 @keyframes wish-arrive { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes secret-arrive { from { opacity: 0; transform: translateY(-6px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @media (prefers-reduced-motion: no-preference) {
