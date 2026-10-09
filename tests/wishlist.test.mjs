@@ -4,8 +4,10 @@ import { randomUUID, randomBytes } from 'node:crypto';
 import { validateGift, family } from '../lib/family.js';
 import { createWishlistService } from '../lib/wishlist-service.js';
 const input = () => ({ id: randomUUID(), receipt: randomBytes(32).toString('hex'), person: 'mami', title: 'Sweater', url: 'https://example.com/gift?a=1&b=2', notes: 'Medium', price: '' });
-test('ten family members and optional price with exact link preserved', () => {
-  assert.equal(family.length, 10);
+test('eleven family members and optional price with exact link preserved', () => {
+  assert.equal(family.length, 11);
+  assert.equal(family.find(person => person.id === 'chris').name, 'Chris');
+  assert.equal(validateGift({ ...input(), person: 'chris' }).person, 'chris');
   const raw = input(), gift = validateGift(raw);
   assert.equal(gift.price, null); assert.equal(gift.url, raw.url);
 });
