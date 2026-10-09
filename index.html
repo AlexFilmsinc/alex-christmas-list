@@ -10,39 +10,36 @@
 <title>Our Family Christmas Wishlist</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/family.css"><link rel="stylesheet" href="/mailroom.css"><script type="module" src="/app.js"></script>
+<link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/family.css"><script type="module" src="/app.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#family">Skip to wishlists</a>
 <nav class="site-nav" aria-label="Main navigation"><a class="wordmark" href="/">Our family <span>Christmas wishlist</span></a><button id="share-list" class="share-button" type="button">Share link <span aria-hidden="true">↗</span></button></nav>
 <p id="share-status" class="share-status" role="status"></p>
 <header class="hero family-hero"><div class="hero__inner">
-<div class="postmark" aria-hidden="true"><span>FAMILY POST</span><b>25 DEC</b><span>CHRISTMAS 2026</span></div>
-<p class="eyebrow">Our Family Christmas Wishlist</p>
-<h1>The Christmas<br><em>Mailroom</em></h1>
-<p class="hero__copy">A letter from everyone. A little inspiration inside.</p>
-<div class="hero-actions"><a class="hero__button" href="#family">Open the mail ↓</a><button class="outline-button" type="button" data-add>Add a wish +</button></div>
-<p class="hero-footnote">FAMILY POST · HOLIDAY EDITION · NO. 2026</p>
+<div class="holiday-seal" aria-hidden="true">✧</div>
+<p class="eyebrow">Made for our people · Christmas 2026</p>
+<h1>Our Family<br><em>Christmas Wishlist</em></h1>
+<p class="hero__copy">A little inspiration for the people we love.<br>All our wishes, together in one place.</p>
+<div class="hero-actions"><a class="hero__button" href="#family">Find your person ↓</a><button class="outline-button" type="button" data-add>Add to my wishlist +</button></div>
+<p class="hero-footnote">For Secret Santa. For little surprises. For each other.</p>
 </div></header>
 <main class="page-shell family-shell">
 <section id="family" aria-labelledby="family-heading">
-<div class="section-heading"><div><p class="eyebrow">The sorting desk</p><h2 id="family-heading">You’ve got Christmas mail.</h2></div><p>Tap an envelope to open their wishlist.</p></div>
+<div class="section-heading"><div><p class="eyebrow">01 / Our people</p><h2 id="family-heading">Someone you love.</h2></div><p>Pick a name. Find a little inspiration.</p></div>
 <nav id="people" class="people-grid" aria-label="Family wishlists"></nav>
-<details class="christmas-secret"><summary aria-label="Open the unaddressed envelope"><span aria-hidden="true">✧</span></summary><div class="secret-note"><span class="secret-label">The Christmas Heist</span><p>You weren’t supposed to find this. Yet.</p><span>Keep this between us.</span><span class="heist-signature" aria-hidden="true">— ✦ —</span></div></details>
 </section>
-<section id="wishlist" class="wishlist-section" aria-labelledby="list-title" hidden>
-<div class="letter-toolbar"><button id="back-mailroom" type="button">← Back to the mailroom</button><span>CHRISTMAS 2026</span></div>
-<div class="section-heading list-heading"><div><p class="eyebrow">A Christmas letter from</p><h2 id="list-title" tabindex="-1">Your family</h2><p class="letter-intro">A few things on my wishlist this year.</p></div><div class="letter-stamp" aria-hidden="true">FAMILY<br>POST<br>✧</div></div>
-<div class="list-tools"><label for="sort">Sort by</label><select id="sort"><option value="price">Price: low to high</option><option value="price-desc">Price: high to low</option></select><button class="small-button" id="refresh" type="button">Refresh</button><button class="small-button primary" type="button" data-add>Add a wish +</button></div>
+<section id="wishlist" class="wishlist-section" aria-labelledby="list-title">
+<div class="section-heading list-heading"><div><p class="eyebrow">02 / Little wishes</p><h2 id="list-title">Alex’s wishlist</h2></div>
+<div class="list-tools"><label for="sort">Sort by</label><select id="sort"><option value="price">Price: low to high</option><option value="price-desc">Price: high to low</option></select><button class="small-button" id="refresh" type="button">Refresh</button><button class="small-button primary" type="button" data-add>Add a gift +</button></div></div>
 <p id="load-status" class="load-status" role="status">Loading everyone’s ideas…</p>
 <p class="price-note">Listed prices may change. Check the shop for the latest price.</p>
 <div id="gift-list" class="gift-grid"></div>
-<div id="empty-state" class="empty-state" hidden><span aria-hidden="true">✉</span><h3>Your letter is waiting.</h3><p>No wishes added yet. Start with something you’d love.</p><button class="small-button primary" type="button" data-add>Add a wish +</button></div>
-<p class="letter-signoff">With love,<br><span id="letter-signature"></span></p>
+<div id="empty-state" class="empty-state" hidden><span aria-hidden="true">✧</span><h3>No wishes here just yet.</h3><p>Add the first idea for this person.</p><button class="small-button primary" type="button" data-add>Add a gift +</button></div>
 </section><noscript><p>Please enable JavaScript to browse and submit family gifts.</p></noscript>
 </main>
 <dialog id="gift-dialog" aria-labelledby="form-title">
-<div class="dialog-top"><p class="eyebrow">A note for your letter</p><button class="close-button" id="close-dialog" type="button" aria-label="Close gift form">×</button></div>
+<div class="dialog-top"><p class="eyebrow">Make their shopping easier</p><button class="close-button" id="close-dialog" type="button" aria-label="Close gift form">×</button></div>
 <h2 id="form-title">Add a little wish.</h2><p class="form-intro">Paste the exact link and any details that help. Your gift will appear as soon as it’s saved.</p>
 <form id="gift-form">
 <label for="person">Whose wishlist?</label><select id="person" name="person" required><option value="">Choose your name</option></select>
@@ -54,6 +51,7 @@
 <p class="form-note">Gift ideas are visible to anyone with the site link.</p><p id="form-status" role="status"></p><button class="submit-button" id="save-gift" type="submit">Add to wishlist</button>
 </form></dialog>
 <footer class="simple-footer"><small>Our Family Christmas Wishlist · 2026</small>
+<details class="christmas-secret"><summary aria-label="A curious little star"><span aria-hidden="true">✧</span></summary><div class="secret-note"><span class="secret-label">The Christmas Heist</span><p>You weren’t supposed to find this. Yet.</p><span>Keep this between us.</span><span class="heist-signature" aria-hidden="true">— ✦ —</span></div></details>
 <p class="creator-credit">Made by <strong>Alex Films</strong><span aria-hidden="true"> ✦</span></p>
 </footer>
 </body></html>

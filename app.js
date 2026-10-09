@@ -2,8 +2,7 @@ import { family } from './lib/family.js';
 const $ = selector => document.querySelector(selector);
 const names = Object.fromEntries(family.map(p => [p.id, p.name]));
 const query = new URLSearchParams(location.search).get('person');
-let selected = names[query] ? query : null;
-let openingEnvelope = false;
+let selected = names[query] ? query : 'alex';
 let curated = [], submitted = [], loading = true, loadError = false;
 let pending = null;
 const receipts = new Map();
@@ -53,11 +52,7 @@ function selectPerson(id) {
   url.hash = 'wishlist';
   history.replaceState(null, '', url);
   render();
-  $('#wishlist').classList.remove('letter-opening');
-  void $('#wishlist').offsetWidth;
-  $('#wishlist').classList.add('letter-opening');
   $('#wishlist').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
-  $('#list-title').focus({ preventScroll: true });
 }
 function renderPeople() {
   const target = $('#people');
@@ -69,24 +64,13 @@ function renderPeople() {
     const count = allGifts().filter(g => g.person === person.id).length;
     const button = node('button', 'person-button');
     button.type = 'button'; button.dataset.person = person.id;
-    button.setAttribute('aria-label', 'Open ' + person.name + '’s wishlist, ' + count + (count === 1 ? ' wish' : ' wishes'));
     button.setAttribute('aria-pressed', String(selected === person.id));
-    const flap = node('span', 'envelope-flap'); flap.setAttribute('aria-hidden', 'true'); button.append(flap);
-    const slip = node('span', 'envelope-slip', 'CHRISTMAS WISHES'); slip.setAttribute('aria-hidden', 'true'); button.append(slip);
     {
       const initials = person.name.split(' ').map(s => s[0]).join('');
       const icon = node('span', 'person-initial', initials); icon.setAttribute('aria-hidden', 'true'); button.append(icon);
     }
-    button.append(node('span', 'envelope-to', 'A letter from'), node('strong', '', person.name), node('small', '', count + (count === 1 ? ' wish inside' : ' wishes inside')));
-    const seal = node('span', 'envelope-seal', '✧'); seal.setAttribute('aria-hidden', 'true'); button.append(seal);
-    button.addEventListener('click', async () => {
-      if (openingEnvelope) return;
-      openingEnvelope = true;
-      button.classList.add('envelope-opening');
-      if (!reducedMotion.matches) await new Promise(resolve => setTimeout(resolve, 480));
-      selectPerson(person.id);
-      openingEnvelope = false;
-    });
+    button.append(node('strong', '', person.name), node('small', '', count + (count === 1 ? ' idea' : ' ideas')));
+    button.addEventListener('click', () => selectPerson(person.id));
     target.append(button);
     watchReveal(button, index, 'person-' + person.id);
   }
@@ -129,9 +113,7 @@ function card(gift) {
 }
 function render() {
   renderPeople();
-  $('#wishlist').hidden = !selected;
-  $('#list-title').textContent = names[selected] || 'Your family';
-  $('#letter-signature').textContent = names[selected] || '';
+  $('#list-title').textContent = names[selected] + '’s wishlist';
   const gifts = allGifts().filter(g => g.person === selected);
   const descending = $('#sort').value === 'price-desc';
   gifts.sort((a, b) => {
@@ -168,7 +150,7 @@ async function refresh() {
 }
 for (const person of family) $('#person').append(new Option(person.name, person.id));
 for (const button of document.querySelectorAll('[data-add]')) button.addEventListener('click', () => {
-  if (!$('#title').value) $('#person').value = selected || '';
+  if (!$('#title').value) $('#person').value = selected;
   $('#gift-dialog').showModal();
 });
 $('#close-dialog').addEventListener('click', () => $('#gift-dialog').close());
@@ -196,17 +178,9 @@ $('#gift-form').addEventListener('submit', async e => {
 });
 $('#sort').addEventListener('change', render);
 $('#refresh').addEventListener('click', refresh);
-$('#back-mailroom').addEventListener('click', () => {
-  const previous = selected;
-  selected = null;
-  history.replaceState(null, '', location.pathname + '#family');
-  render();
-  $('#family').scrollIntoView({ behavior: reducedMotion.matches ? 'instant' : 'smooth', block: 'start' });
-  document.querySelector('[data-person="' + previous + '"]')?.focus({ preventScroll: true });
-});
 $('#share-list').addEventListener('click', async () => {
   const url = new URL(location.pathname, location.origin);
-  if (selected) { url.searchParams.set('person', selected); url.hash = 'wishlist'; }
+  if (query || location.search) { url.searchParams.set('person', selected); url.hash = 'wishlist'; }
   try {
     await navigator.clipboard.writeText(url.href);
     $('#share-status').textContent = 'Link copied.';
@@ -220,6 +194,5 @@ try {
 } catch { $('#load-status').textContent = 'Some original gifts could not load. Please refresh.'; }
 document.querySelectorAll('.section-heading, footer > p, footer > small, .christmas-secret').forEach((element, index) => watchReveal(element, index));
 render();
-if (selected && location.hash === '#wishlist') $('#wishlist').scrollIntoView({ behavior: 'instant', block: 'start' });
 await refresh();
 document.addEventListener('visibilitychange', () => { if (!document.hidden && !$('#gift-dialog').open) refresh(); });
