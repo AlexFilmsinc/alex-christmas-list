@@ -2,12 +2,42 @@ import { family } from './lib/family.js';
 const $ = selector => document.querySelector(selector);
 const names = Object.fromEntries(family.map(p => [p.id, p.name]));
 const query = new URLSearchParams(location.search).get('person');
-let selected = names[query] ? query : 'all';
+let selected = names[query] ? query : 'alex';
 let curated = [], submitted = [], loading = true, loadError = false;
 let pending = null;
 const receipts = new Map();
 try { for (const [key, value] of Object.entries(JSON.parse(localStorage.getItem('gift-receipts') || '{}'))) receipts.set(key, value); } catch {}
 const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const revealed = new Set();
+const revealObserver = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
+  for (const entry of entries) {
+    if (!entry.isIntersecting) continue;
+    revealElement(entry.target);
+  }
+}, { threshold: 0, rootMargin: '0px 0px -12px 0px' }) : null;
+function revealElement(element) {
+  element.classList.add('is-revealed');
+  if (element.dataset.revealKey) revealed.add(element.dataset.revealKey);
+  revealObserver?.unobserve(element);
+}
+function watchReveal(element, index = 0, key) {
+  if (key) element.dataset.revealKey = key;
+  if (!revealObserver || reducedMotion.matches || (key && revealed.has(key))) return;
+  element.style.setProperty('--reveal-delay', (index % 3) * 65 + 'ms');
+  element.classList.add('scroll-reveal');
+  revealObserver.observe(element);
+}
+function releaseReveals(container) {
+  container.querySelectorAll('.scroll-reveal').forEach(element => revealObserver?.unobserve(element));
+}
+reducedMotion.addEventListener('change', () => {
+  if (reducedMotion.matches) document.querySelectorAll('.scroll-reveal').forEach(revealElement);
+});
+document.addEventListener('focusin', event => {
+  const element = event.target.closest('.scroll-reveal');
+  if (element) revealElement(element);
+});
 function node(tag, className, text) {
   const el = document.createElement(tag);
   if (className) el.className = className;
@@ -18,7 +48,7 @@ function allGifts() { return [...curated, ...submitted]; }
 function selectPerson(id) {
   selected = id;
   const url = new URL(location.href);
-  if (id === 'all') url.searchParams.delete('person'); else url.searchParams.set('person', id);
+  url.searchParams.set('person', id);
   url.hash = 'wishlist';
   history.replaceState(null, '', url);
   render();
@@ -28,19 +58,21 @@ function renderPeople() {
   const target = $('#people');
   // Retain focus when background refreshes update counts.
   const focused = document.activeElement?.dataset.person;
+  releaseReveals(target);
   target.replaceChildren();
-  for (const person of [{ id: 'all', name: 'Everyone' }, ...family]) {
-    const count = allGifts().filter(g => person.id === 'all' || g.person === person.id).length;
-    const button = node('button', 'person-button' + (person.id === 'all' ? ' person-button--all' : ''));
+  for (const [index, person] of family.entries()) {
+    const count = allGifts().filter(g => g.person === person.id).length;
+    const button = node('button', 'person-button');
     button.type = 'button'; button.dataset.person = person.id;
     button.setAttribute('aria-pressed', String(selected === person.id));
-    if (person.id !== 'all') {
+    {
       const initials = person.name.split(' ').map(s => s[0]).join('');
       const icon = node('span', 'person-initial', initials); icon.setAttribute('aria-hidden', 'true'); button.append(icon);
     }
     button.append(node('strong', '', person.name), node('small', '', count + (count === 1 ? ' idea' : ' ideas')));
     button.addEventListener('click', () => selectPerson(person.id));
     target.append(button);
+    watchReveal(button, index, 'person-' + person.id);
   }
   if (focused) target.querySelector('[data-person="' + focused + '"]')?.focus({ preventScroll: true });
 }
@@ -81,17 +113,18 @@ function card(gift) {
 }
 function render() {
   renderPeople();
-  $('#list-title').textContent = selected === 'all' ? 'Everyone’s ideas' : names[selected] + '’s wishlist';
-  const gifts = allGifts().filter(g => selected === 'all' || g.person === selected);
+  $('#list-title').textContent = names[selected] + '’s wishlist';
+  const gifts = allGifts().filter(g => g.person === selected);
   const descending = $('#sort').value === 'price-desc';
   gifts.sort((a, b) => {
     if (a.price == null) return b.price == null ? 0 : 1;
     if (b.price == null) return -1;
     return descending ? b.price - a.price : a.price - b.price;
   });
+  releaseReveals($('#gift-list'));
   $('#gift-list').replaceChildren(...gifts.map((gift, index) => {
     const element = card(gift);
-    element.style.setProperty('--reveal-delay', Math.min(index, 5) * 45 + 'ms');
+    watchReveal(element, index, 'gift-' + gift.person + '-' + gift.id);
     return element;
   }));
   $('#empty-state').hidden = gifts.length > 0 || loading || loadError;
@@ -117,7 +150,7 @@ async function refresh() {
 }
 for (const person of family) $('#person').append(new Option(person.name, person.id));
 for (const button of document.querySelectorAll('[data-add]')) button.addEventListener('click', () => {
-  if (!$('#title').value) $('#person').value = selected === 'all' ? '' : selected;
+  if (!$('#title').value) $('#person').value = selected;
   $('#gift-dialog').showModal();
 });
 $('#close-dialog').addEventListener('click', () => $('#gift-dialog').close());
@@ -147,8 +180,8 @@ $('#sort').addEventListener('change', render);
 $('#refresh').addEventListener('click', refresh);
 $('#share-list').addEventListener('click', async () => {
   const url = new URL(location.pathname, location.origin);
-  if (selected !== 'all') { url.searchParams.set('person', selected); url.hash = 'wishlist'; }
-  const title = selected === 'all' ? 'Our Family Christmas Wishlist' : names[selected] + '’s Christmas Wishlist';
+  if (query || location.search) { url.searchParams.set('person', selected); url.hash = 'wishlist'; }
+  const title = url.search ? names[selected] + '’s Christmas Wishlist' : 'Our Family Christmas Wishlist';
   try {
     if (navigator.share) await navigator.share({ title, text: 'A little inspiration for Christmas.', url: url.href });
     else { await navigator.clipboard.writeText(url.href); $('#share-status').textContent = 'Wishlist link copied—ready to send to the family.'; }
@@ -160,6 +193,7 @@ try {
   const response = await fetch('/data/curated.json'); if (!response.ok) throw new Error();
   curated = await response.json();
 } catch { $('#load-status').textContent = 'Some original gifts could not load. Please refresh.'; }
+document.querySelectorAll('.section-heading, footer > p, footer > small, .christmas-secret').forEach((element, index) => watchReveal(element, index));
 render();
 await refresh();
 document.addEventListener('visibilitychange', () => { if (!document.hidden && !$('#gift-dialog').open) refresh(); });
