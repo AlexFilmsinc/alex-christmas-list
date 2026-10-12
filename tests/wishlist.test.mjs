@@ -4,6 +4,7 @@ import { randomUUID, randomBytes } from 'node:crypto';
 import { validateGift, family } from '../lib/family.js';
 import { createWishlistService } from '../lib/wishlist-service.js';
 import { accessCodeFor, assignmentsFor, revealRecipient } from '../lib/secret-santa.js';
+import { createSecretSantaService } from '../lib/secret-santa-service.js';
 const input = () => ({ id: randomUUID(), receipt: randomBytes(32).toString('hex'), person: 'mami', title: 'Sweater', url: 'https://example.com/gift?a=1&b=2', notes: 'Medium', price: '' });
 test('ten participating family members and optional price with exact link preserved', () => {
   assert.equal(family.length, 10);
@@ -23,6 +24,30 @@ test('secret santa includes everyone once, excludes self, and reveals only with 
     assert.deepEqual(revealRecipient(person.id, accessCodeFor(person.id, secret), secret), assignments.get(person.id));
     assert.equal(revealRecipient(person.id, 'WRONG-CODE', secret), null);
   }
+});
+test('secret santa stays locked until all ten join, saves encrypted emails and sends permanent links', async () => {
+  const secret = 'a-separate-test-secret-for-the-gated-draw';
+  const joins = new Map(), mailed = new Set(), messages = [];
+  const store = {
+    listJoins: async () => [...joins.values()],
+    putJoin: async record => joins.set(record.person, record),
+    hasMail: async person => mailed.has(person),
+    markMail: async person => mailed.add(person)
+  };
+  const mailer = { send: async message => messages.push(message) };
+  const service = createSecretSantaService(store, { secret, siteUrl: 'https://family.example', mailer });
+  for (const [index, person] of family.entries()) {
+    const result = await service.join({ person: person.id, code: accessCodeFor(person.id, secret), email: `${person.id}@example.com` });
+    assert.equal(result.status.complete, index === family.length - 1);
+    if (index < family.length - 1) assert.equal(result.recipient, null);
+  }
+  assert.equal(messages.length, family.length);
+  assert.equal(mailed.size, family.length);
+  assert.ok([...joins.values()].every(record => !JSON.stringify(record).includes('@example.com')));
+  const alex = await service.reveal({ person: 'alex', code: accessCodeFor('alex', secret) });
+  assert.equal(alex.locked, false);
+  assert.notEqual(alex.recipient.id, 'alex');
+  assert.match(alex.personalLink, /draw=alex&token=/);
 });
 test('reject unknown people, executable URLs, invalid prices and large notes', () => {
   for (const fields of [{ person: 'stranger' }, { url: 'javascript:alert(1)' }, { price: -3 }, { notes: 'x'.repeat(1201) }, { id: '../escape' }]) assert.throws(() => validateGift({ ...input(), ...fields }));

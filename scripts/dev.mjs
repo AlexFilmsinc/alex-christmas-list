@@ -6,6 +6,10 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
 http.createServer(async (req, res) => {
   const path = new URL(req.url, 'http://localhost').pathname;
   if (path === '/api/secret-santa') {
+    if (req.method === 'GET') {
+      res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+      return res.end(JSON.stringify({ status: { joined: [], count: 0, total: 10, complete: false, mailConfigured: false } }));
+    }
     res.writeHead(503, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
     return res.end(JSON.stringify({ error: 'Private draws open on the live website after deployment.' }));
   }

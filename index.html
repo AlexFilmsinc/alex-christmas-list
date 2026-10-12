@@ -2,39 +2,41 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Our family Christmas wishlists. Find a gift for your Secret Santa person, or add your own ideas.">
-<meta name="robots" content="noindex, nofollow"><meta name="theme-color" content="#213e34">
-<meta property="og:title" content="Our Family Christmas Wishlist">
+<meta name="description" content="Films Family Christmas '26 — private Secret Santa draw and family wishlists in one place.">
+<meta name="robots" content="noindex, nofollow"><meta name="referrer" content="no-referrer"><meta name="theme-color" content="#213e34">
+<meta property="og:title" content="Films Family Christmas '26">
 <meta property="og:description" content="A little inspiration for the people we love. Browse our family’s Christmas wishes and add your own.">
 <meta property="og:type" content="website">
-<title>Our Family Christmas Wishlist</title>
+<title>Films Family Christmas '26</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/family.css"><script type="module" src="/app.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#family">Skip to wishlists</a>
-<nav class="site-nav" aria-label="Main navigation"><a class="wordmark" href="/">Our family <span>Christmas wishlist</span></a><button id="share-list" class="share-button" type="button">Share link <span aria-hidden="true">↗</span></button></nav>
+<nav class="site-nav" aria-label="Main navigation"><a class="wordmark" href="/">Films Family <span>Christmas '26</span></a><button id="share-list" class="share-button" type="button">Share link <span aria-hidden="true">↗</span></button></nav>
 <p id="share-status" class="share-status" role="status"></p>
 <header class="hero family-hero"><div class="hero__inner">
 <div class="holiday-seal" aria-hidden="true">✧</div>
 <p class="eyebrow">Made for our people · Christmas 2026</p>
-<h1>Our Family<br><em>Christmas Wishlist</em></h1>
+<h1>Films Family<br><em>Christmas '26</em></h1>
 <p class="hero__copy">A little inspiration for the people we love.<br>All our wishes, together in one place.</p>
 <div class="hero-actions"><a class="hero__button" href="#draw">Open your draw ↓</a><button class="outline-button" type="button" data-add>Add to my wishlist +</button></div>
 <p class="hero-footnote">For Secret Santa. For little surprises. For each other.</p>
 </div></header>
 <main class="page-shell family-shell">
 <section id="draw" class="draw-section" aria-labelledby="draw-heading">
-<div class="draw-copy"><p class="eyebrow">01 / Secret Santa</p><h2 id="draw-heading">Your draw is sealed.</h2><p>Choose your name and enter the private code Alex sent you. Only your person will be revealed.</p><div class="draw-trust"><span aria-hidden="true">✦</span> One giver. One person. No peeking.</div></div>
+<div class="draw-copy"><p class="eyebrow">01 / Secret Santa</p><h2 id="draw-heading">Everyone in. Then we draw.</h2><p>Confirm your spot with your private code and email. The envelopes stay sealed until all ten family members have joined.</p><div class="draw-progress" aria-label="Secret Santa participation"><div class="draw-progress__top"><strong id="draw-count">Checking the list…</strong><span id="draw-progress-label">0 / 10</span></div><div class="draw-progress__track" aria-hidden="true"><span id="draw-progress-bar"></span></div></div><div class="draw-trust"><span aria-hidden="true">✦</span> Private, saved, and no early peeking.</div></div>
 <div class="draw-envelope">
-<div class="envelope-mark" aria-hidden="true">A</div><p class="envelope-kicker">Christmas 2026</p><h3>Open your envelope</h3>
+<div class="envelope-mark" aria-hidden="true">F</div><p class="envelope-kicker">Films Family · 2026</p><h3>Join the draw</h3>
 <form id="draw-form" autocomplete="off">
 <label for="draw-person">Your name</label><select id="draw-person" name="person" required><option value="">Choose your name</option></select>
+<label for="draw-email">Your email</label><input id="draw-email" name="email" type="email" maxlength="254" autocomplete="email" placeholder="you@example.com" required>
 <label for="draw-code">Private code</label><input id="draw-code" name="code" type="password" maxlength="20" spellcheck="false" autocomplete="one-time-code" placeholder="XXXX-XXXX-XXXX" required>
-<p id="draw-status" class="draw-status" role="status"></p><button id="open-draw" class="submit-button" type="submit">Reveal my person</button>
+<p class="draw-privacy">Your email is encrypted and never shown on the website.</p><p id="draw-status" class="draw-status" role="status"></p><button id="open-draw" class="submit-button" type="submit">Join the draw</button>
 </form>
-<div id="draw-result" class="draw-result" hidden><p>You’re shopping for</p><strong id="draw-recipient"></strong><button id="recipient-list" class="recipient-link" type="button">See their wishlist →</button><button id="close-draw" class="draw-reset" type="button">Seal it again</button></div>
+<div id="draw-waiting" class="draw-waiting" hidden><span class="waiting-check" aria-hidden="true">✓</span><h3>You’re in.</h3><p id="waiting-copy">Your envelope stays sealed until everyone joins.</p><button id="copy-private-link" class="recipient-link" type="button">Copy my private link</button><button id="edit-draw" class="draw-reset" type="button">Update my details</button></div>
+<div id="draw-result" class="draw-result" hidden><p>You’re shopping for</p><strong id="draw-recipient"></strong><button id="recipient-list" class="recipient-link" type="button">See their wishlist →</button><button id="copy-reveal-link" class="draw-secondary" type="button">Copy my permanent link</button><button id="close-draw" class="draw-reset" type="button">Seal it again</button></div>
 </div>
 </section>
 <section id="family" aria-labelledby="family-heading">
@@ -62,7 +64,7 @@
 <div class="honeypot" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
 <p class="form-note">Gift ideas are visible to anyone with the site link.</p><p id="form-status" role="status"></p><button class="submit-button" id="save-gift" type="submit">Add to wishlist</button>
 </form></dialog>
-<footer class="simple-footer"><small>Our Family Christmas Wishlist · 2026</small>
+<footer class="simple-footer"><small>Films Family Christmas '26</small>
 <details class="christmas-secret"><summary aria-label="A curious little star"><span aria-hidden="true">✧</span></summary><div class="secret-note"><span class="secret-label">The Christmas Heist</span><p>You weren’t supposed to find this. Yet.</p><span>Keep this between us.</span><span class="heist-signature" aria-hidden="true">— ✦ —</span></div></details>
 <p class="creator-credit">Made by <strong>Alex Films</strong><span aria-hidden="true"> ✦</span></p>
 </footer>

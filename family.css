@@ -33,7 +33,12 @@ button:disabled { cursor: wait; opacity: .65; }
 .draw-section { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 470px); gap: clamp(36px, 8vw, 100px); align-items: center; margin-bottom: 72px; padding-bottom: 72px; border-bottom: 1px solid var(--line); }
 .draw-copy > p:not(.eyebrow) { max-width: 520px; color: var(--muted); line-height: 1.75; }
 .draw-trust { display: inline-flex; align-items: center; gap: 10px; margin-top: 18px; color: #741522; font-size: .76rem; font-weight: 700; letter-spacing: .04em; }
-.draw-envelope { position: relative; min-height: 390px; padding: 42px; overflow: hidden; border: 1px solid #dfd5c7; border-radius: 18px; background: linear-gradient(145deg, #fffdf8, #f3eadf); box-shadow: 0 18px 55px #44210e14; }
+.draw-progress { max-width: 520px; margin-top: 30px; }
+.draw-progress__top { display: flex; justify-content: space-between; gap: 20px; color: var(--ink); font-size: .78rem; }
+.draw-progress__top span { color: #741522; font-weight: 700; }
+.draw-progress__track { height: 7px; margin-top: 10px; overflow: hidden; border-radius: 999px; background: #e6ded2; }
+.draw-progress__track span { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #741522, #b96c65); transition: width .6s cubic-bezier(.16, 1, .3, 1); }
+.draw-envelope { position: relative; min-height: 470px; padding: 42px; overflow: hidden; border: 1px solid #dfd5c7; border-radius: 18px; background: linear-gradient(145deg, #fffdf8, #f3eadf); box-shadow: 0 18px 55px #44210e14; }
 .draw-envelope::before, .draw-envelope::after { content: ''; position: absolute; left: -6%; right: -6%; bottom: -44%; height: 76%; border: 1px solid #dacdbd; transform: rotate(24deg); pointer-events: none; }
 .draw-envelope::after { transform: rotate(-24deg); }
 .draw-envelope > * { position: relative; z-index: 1; }
@@ -42,12 +47,18 @@ button:disabled { cursor: wait; opacity: .65; }
 .draw-envelope h3 { margin: 0 0 20px; color: var(--ink); font: 600 1.8rem 'Playfair Display', Georgia, serif; }
 .draw-envelope form label { margin-top: 12px; }
 .draw-envelope form input, .draw-envelope form select { background: #fffdfb; }
+.draw-privacy { margin: 10px 0 0; color: var(--muted); font-size: .68rem; }
 .draw-status { min-height: 21px; margin: 10px 0; color: var(--muted); font-size: .78rem; }
 .draw-status.error { color: #9c2131; }
 .draw-result { padding: 24px 0 8px; text-align: center; }
 .draw-result > p { margin: 0; color: #8b6670; text-transform: uppercase; letter-spacing: .15em; font-size: .62rem; font-weight: 700; }
 .draw-result > strong { display: block; margin: 12px 0 24px; color: #741522; font: 600 clamp(2.4rem, 5vw, 3.4rem) 'Playfair Display', Georgia, serif; }
 .recipient-link { display: block; width: 100%; padding: 13px; border: 0; border-radius: 10px; background: #741522; color: white; font-weight: 700; }
+.draw-waiting { padding: 22px 0 8px; text-align: center; }
+.waiting-check { display: grid; place-items: center; width: 54px; height: 54px; margin: 0 auto 18px; border-radius: 50%; background: #294b3e; color: white; font-size: 1.3rem; }
+.draw-waiting h3 { margin-bottom: 10px; font-size: 2rem; }
+.draw-waiting p { margin: 0 0 24px; color: var(--muted); font-size: .85rem; line-height: 1.6; }
+.draw-secondary { display: block; width: 100%; margin-top: 10px; padding: 11px; border: 1px solid #cdbfb2; border-radius: 10px; background: #fffaf3; color: var(--ink); font-weight: 700; }
 .draw-reset { margin-top: 16px; padding: 4px; border: 0; background: transparent; color: var(--muted); text-decoration: underline; font-size: .72rem; }
 .people-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
 .person-button { display: flex; flex-direction: column; align-items: center; padding: 22px 20px; border-radius: 12px; border: 1px solid var(--line); color: var(--ink); background: #fffdf8; text-align: center; gap: 4px; transition: background .18s, border-color .18s; }
