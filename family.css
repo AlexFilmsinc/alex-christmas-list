@@ -1,6 +1,7 @@
 [hidden] { display: none !important; }
 :root { --paper: #faf7ef; --ink: #243d33; --muted: #6b7067; --line: #e3e3d6; --red: #294b3e; --red-dark: #19382c; --red-soft: #edf0e7; --shadow: 0 8px 28px #283e3010; }
 .site-nav { max-width: 1320px; margin: auto; padding: 26px 40px; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+.nav-actions { display: flex; align-items: center; gap: 8px; }
 .wordmark { text-decoration: none; font-family: 'Playfair Display', Georgia, serif; font-size: 1.6rem; line-height: 1.2; }
 .wordmark span { display: block; font-family: 'DM Sans', sans-serif; font-size: .58rem; text-transform: uppercase; letter-spacing: .2em; margin-top: 6px; }
 .share-button { border: 1px solid #ccd2c6; border-radius: 100px; background: transparent; color: var(--ink); padding: 11px 19px; font-size: .8rem; }
@@ -30,6 +31,13 @@ button:disabled { cursor: wait; opacity: .65; }
 .family-shell { padding-top: 56px; }
 .family-shell h2 { font-size: clamp(1.9rem, 3.6vw, 2.75rem); }
 #draw, #family, #wishlist { scroll-margin-top: 24px; }
+.draw-locked #family, .draw-locked #wishlist, .draw-locked .family-hero [data-add] { display: none; }
+.draw-authenticated #draw { display: none; }
+.draw-session { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 48px; padding: 24px 28px; border-radius: 16px; background: #203c31; color: #fffaf0; box-shadow: 0 12px 36px #203c3118; }
+.draw-session > div { display: flex; flex-direction: column; gap: 5px; }
+.draw-session span { color: #d6c8a7; font-size: .6rem; font-weight: 700; letter-spacing: .17em; text-transform: uppercase; }
+.draw-session strong { font: 600 clamp(1.55rem, 3vw, 2.15rem) 'Playfair Display', Georgia, serif; }
+.draw-session button { flex: none; padding: 12px 17px; border: 1px solid #718376; border-radius: 999px; background: transparent; color: white; font-weight: 700; }
 .draw-section { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 470px); gap: clamp(36px, 8vw, 100px); align-items: center; margin-bottom: 72px; padding-bottom: 72px; border-bottom: 1px solid var(--line); }
 .draw-copy > p:not(.eyebrow) { max-width: 520px; color: var(--muted); line-height: 1.75; }
 .draw-trust { display: inline-flex; align-items: center; gap: 10px; margin-top: 18px; color: #741522; font-size: .76rem; font-weight: 700; letter-spacing: .04em; }
@@ -141,6 +149,8 @@ form textarea { resize: vertical; }
   .wordmark { font-size: 1.35rem; }
   .share-button { padding: 10px 12px; font-size: .72rem; }
   .share-button span { margin-left: 5px; }
+  .nav-actions { gap: 5px; }
+  .nav-actions .share-button { padding: 9px 10px; }
   .family-hero { min-height: 490px; margin: 0 12px; padding: 40px 18px; border-radius: 75px 75px 10px 10px; }
   .family-hero h1 { font-size: clamp(2.3rem, 9vw, 3.4rem); }
   .family-hero::before, .family-hero::after { display: none; }
@@ -150,6 +160,8 @@ form textarea { resize: vertical; }
   .hero-footnote { font-size: .62rem; }
   .draw-section { margin-bottom: 48px; padding-bottom: 48px; }
   .draw-envelope { min-height: 0; padding: 30px 24px; }
+  .draw-session { align-items: flex-start; flex-direction: column; margin-bottom: 34px; padding: 22px; }
+  .draw-session button { width: 100%; }
   .people-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .person-button { padding: 15px; }
   .gift-card__image { height: 200px; }

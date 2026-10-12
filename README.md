@@ -13,6 +13,7 @@ GitHub main deploys to production.
 - Secret Santa access uses `/api/secret-santa`. Assignments and private codes are derived only on the server from the sensitive `SECRET_SANTA_KEY`; neither is shipped to the browser or committed to Git.
 - Each participant confirms with their private code and email. The encrypted registration is stored in the private Blob store, and all reveals remain locked until all ten participants have joined.
 - Every participant receives a deterministic private reveal URL that remains valid while `SECRET_SANTA_KEY` is unchanged. The browser saves only that private URL, never the email or access code.
+- The wishlist interface stays hidden until that participant's draw is unlocked. Returning on the same device or through the private URL restores their session, skips the draw screen, and shows their assigned person in the signed-in banner.
 - Automatic delivery is enabled when the server-only `RESEND_API_KEY` and `SECRET_SANTA_FROM_EMAIL` variables are configured. `PUBLIC_SITE_URL` controls the domain used in emailed links.
 - `.local/secret-santa-invites-2026.txt` is the ignored, private code sheet. Send each person only their own code. Never commit or publish that file.
 - Every gift has its own record, so simultaneous submissions do not overwrite one another. Repeated requests use the same ID.

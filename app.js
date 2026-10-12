@@ -153,6 +153,7 @@ for (const person of family) {
   $('#draw-person').append(new Option(person.name, person.id));
 }
 let revealedRecipient = null, currentPrivateLink = null, currentDrawPerson = null;
+let drawComplete = false, drawUnlocked = false, giftsStarted = false;
 try { currentPrivateLink = localStorage.getItem('secret-santa-private-link'); } catch {}
 function drawLinkDetails(link) {
   try {
@@ -162,10 +163,14 @@ function drawLinkDetails(link) {
 }
 function paintDrawStatus(status) {
   if (!status) return;
+  drawComplete = status.complete;
   $('#draw-progress-label').textContent = `${status.count} / ${status.total}`;
   $('#draw-progress-bar').style.width = `${Math.round(status.count / status.total * 100)}%`;
   $('#draw-count').textContent = status.complete ? 'Everyone is in — the draw is open.' : `${status.total - status.count} ${status.total - status.count === 1 ? 'person' : 'people'} left to join`;
-  $('#open-draw').textContent = status.complete ? 'Join & reveal my person' : 'Join the draw';
+  $('#draw-email-fields').hidden = status.complete;
+  $('#draw-email').required = !status.complete;
+  $('.draw-envelope h3').textContent = status.complete ? 'Welcome back' : 'Join the draw';
+  $('#open-draw').textContent = status.complete ? 'Open my family page' : 'Join the draw';
 }
 async function drawRequest(body) {
   const response = await fetch('/api/secret-santa', {
@@ -197,9 +202,26 @@ function showDrawResult(result) {
   paintDrawStatus(result.status);
   revealedRecipient = result.recipient.id;
   $('#draw-recipient').textContent = result.recipient.name;
-  $('#draw-form').hidden = true;
-  $('#draw-waiting').hidden = true;
-  $('#draw-result').hidden = false;
+  unlockSite(result.recipient);
+}
+async function unlockSite(recipient) {
+  drawUnlocked = true;
+  selected = recipient.id;
+  document.body.classList.remove('draw-locked');
+  document.body.classList.add('draw-authenticated');
+  $('#draw').hidden = true;
+  $('#draw-session').hidden = false;
+  $('#draw-logout').hidden = false;
+  $('#session-recipient').textContent = recipient.name;
+  const heroLink = $('.hero__button');
+  heroLink.textContent = `View ${recipient.name}’s wishlist ↓`;
+  heroLink.href = '#wishlist';
+  const url = new URL(location.pathname, location.origin);
+  url.searchParams.set('person', recipient.id);
+  url.hash = 'wishlist';
+  history.replaceState(null, '', url);
+  await loadGiftContent();
+  render();
 }
 async function copyPrivateLink(button) {
   if (!currentPrivateLink) return;
@@ -212,13 +234,14 @@ async function copyPrivateLink(button) {
 }
 $('#draw-form').addEventListener('submit', async event => {
   event.preventDefault();
-  const fields = { action: 'join', ...Object.fromEntries(new FormData(event.currentTarget)) };
+  const fields = Object.fromEntries(new FormData(event.currentTarget));
+  const request = drawComplete ? { action: 'reveal', person: fields.person, code: fields.code } : { action: 'join', ...fields };
   $('#open-draw').disabled = true;
-  $('#open-draw').textContent = 'Saving your spot…';
+  $('#open-draw').textContent = drawComplete ? 'Logging in…' : 'Saving your spot…';
   $('#draw-status').textContent = '';
   $('#draw-status').classList.remove('error');
   try {
-    const result = await drawRequest(fields);
+    const result = await drawRequest(request);
     if (result.recipient) showDrawResult(result); else showWaiting(result);
   } catch (error) {
     $('#draw-status').textContent = error.message || 'Your spot could not be saved. Please try again.';
@@ -226,6 +249,7 @@ $('#draw-form').addEventListener('submit', async event => {
   } finally { $('#open-draw').disabled = false; }
 });
 $('#recipient-list').addEventListener('click', () => { if (revealedRecipient) selectPerson(revealedRecipient); });
+$('#session-wishlist').addEventListener('click', () => { if (revealedRecipient) selectPerson(revealedRecipient); });
 $('#copy-private-link').addEventListener('click', event => copyPrivateLink(event.currentTarget));
 $('#copy-reveal-link').addEventListener('click', event => copyPrivateLink(event.currentTarget));
 $('#edit-draw').addEventListener('click', () => {
@@ -257,7 +281,7 @@ async function refreshDrawGate() {
       try { localStorage.setItem('secret-santa-private-link', currentPrivateLink); } catch {}
     }
     const details = linkedPerson && linkedToken ? { person: linkedPerson, token: linkedToken } : drawLinkDetails(currentPrivateLink);
-    if (details.person && details.token && ($('#draw-waiting').hidden || result.status.complete)) {
+    if (!drawUnlocked && details.person && details.token && ($('#draw-waiting').hidden || result.status.complete)) {
       const reveal = await drawRequest({ action: 'reveal', ...details });
       if (reveal.locked) showWaiting(reveal); else showDrawResult(reveal);
     }
@@ -269,6 +293,26 @@ async function refreshDrawGate() {
     }
   }
 }
+$('#draw-logout').addEventListener('click', () => {
+  drawUnlocked = false;
+  revealedRecipient = null;
+  currentPrivateLink = null;
+  currentDrawPerson = null;
+  try { localStorage.removeItem('secret-santa-private-link'); } catch {}
+  document.body.classList.remove('draw-authenticated');
+  document.body.classList.add('draw-locked');
+  $('#draw-session').hidden = true;
+  $('#draw-logout').hidden = true;
+  $('#draw').hidden = false;
+  $('#draw-result').hidden = true;
+  $('#draw-waiting').hidden = true;
+  $('#draw-form').hidden = false;
+  $('#draw-form').reset();
+  $('.hero__button').textContent = 'Open your draw ↓';
+  $('.hero__button').href = '#draw';
+  history.replaceState(null, '', location.pathname + '#draw');
+  $('#draw').scrollIntoView({ behavior: reducedMotion.matches ? 'instant' : 'smooth', block: 'start' });
+});
 for (const button of document.querySelectorAll('[data-add]')) button.addEventListener('click', () => {
   if (!$('#title').value) $('#person').value = selected;
   $('#gift-dialog').showModal();
@@ -308,13 +352,17 @@ $('#share-list').addEventListener('click', async () => {
     $('#share-status').textContent = 'Couldn’t copy automatically. Copy the link from your browser’s address bar.';
   }
 });
-try {
-  const response = await fetch('/data/curated.json'); if (!response.ok) throw new Error();
-  curated = await response.json();
-} catch { $('#load-status').textContent = 'Some original gifts could not load. Please refresh.'; }
+async function loadGiftContent() {
+  if (giftsStarted) return;
+  giftsStarted = true;
+  try {
+    const response = await fetch('/data/curated.json'); if (!response.ok) throw new Error();
+    curated = await response.json();
+  } catch { $('#load-status').textContent = 'Some original gifts could not load. Please refresh.'; }
+  await refresh();
+}
 document.querySelectorAll('.draw-copy, .draw-envelope, .section-heading, footer > p, footer > small, .christmas-secret').forEach((element, index) => watchReveal(element, index));
 render();
 await refreshDrawGate();
-await refresh();
 setInterval(() => { if (!document.hidden) refreshDrawGate(); }, 30000);
-document.addEventListener('visibilitychange', () => { if (!document.hidden && !$('#gift-dialog').open) { refresh(); refreshDrawGate(); } });
+document.addEventListener('visibilitychange', () => { if (!document.hidden && !$('#gift-dialog').open) { if (drawUnlocked) refresh(); refreshDrawGate(); } });
