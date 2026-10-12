@@ -148,7 +148,46 @@ async function refresh() {
     $('#load-status').classList.add('error');
   } finally { loading = false; $('#refresh').disabled = false; render(); }
 }
-for (const person of family) $('#person').append(new Option(person.name, person.id));
+for (const person of family) {
+  $('#person').append(new Option(person.name, person.id));
+  $('#draw-person').append(new Option(person.name, person.id));
+}
+let revealedRecipient = null;
+$('#draw-form').addEventListener('submit', async event => {
+  event.preventDefault();
+  const fields = Object.fromEntries(new FormData(event.currentTarget));
+  $('#open-draw').disabled = true;
+  $('#open-draw').textContent = 'Opening…';
+  $('#draw-status').textContent = '';
+  $('#draw-status').classList.remove('error');
+  try {
+    const response = await fetch('/api/secret-santa', {
+      method: 'POST', cache: 'no-store', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(fields), signal: AbortSignal.timeout(15000)
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'The envelope would not open. Please try again.');
+    revealedRecipient = result.recipient.id;
+    $('#draw-recipient').textContent = result.recipient.name;
+    $('#draw-form').hidden = true;
+    $('#draw-result').hidden = false;
+  } catch (error) {
+    $('#draw-status').textContent = error.message || 'The envelope would not open. Please try again.';
+    $('#draw-status').classList.add('error');
+  } finally {
+    $('#open-draw').disabled = false;
+    $('#open-draw').textContent = 'Reveal my person';
+  }
+});
+$('#recipient-list').addEventListener('click', () => { if (revealedRecipient) selectPerson(revealedRecipient); });
+$('#close-draw').addEventListener('click', () => {
+  revealedRecipient = null;
+  $('#draw-form').reset();
+  $('#draw-recipient').textContent = '';
+  $('#draw-result').hidden = true;
+  $('#draw-form').hidden = false;
+  $('#draw-status').textContent = '';
+});
 for (const button of document.querySelectorAll('[data-add]')) button.addEventListener('click', () => {
   if (!$('#title').value) $('#person').value = selected;
   $('#gift-dialog').showModal();
@@ -192,7 +231,7 @@ try {
   const response = await fetch('/data/curated.json'); if (!response.ok) throw new Error();
   curated = await response.json();
 } catch { $('#load-status').textContent = 'Some original gifts could not load. Please refresh.'; }
-document.querySelectorAll('.section-heading, footer > p, footer > small, .christmas-secret').forEach((element, index) => watchReveal(element, index));
+document.querySelectorAll('.draw-copy, .draw-envelope, .section-heading, footer > p, footer > small, .christmas-secret').forEach((element, index) => watchReveal(element, index));
 render();
 await refresh();
 document.addEventListener('visibilitychange', () => { if (!document.hidden && !$('#gift-dialog').open) refresh(); });

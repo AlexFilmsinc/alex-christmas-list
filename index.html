@@ -21,16 +21,28 @@
 <p class="eyebrow">Made for our people · Christmas 2026</p>
 <h1>Our Family<br><em>Christmas Wishlist</em></h1>
 <p class="hero__copy">A little inspiration for the people we love.<br>All our wishes, together in one place.</p>
-<div class="hero-actions"><a class="hero__button" href="#family">Find your person ↓</a><button class="outline-button" type="button" data-add>Add to my wishlist +</button></div>
+<div class="hero-actions"><a class="hero__button" href="#draw">Open your draw ↓</a><button class="outline-button" type="button" data-add>Add to my wishlist +</button></div>
 <p class="hero-footnote">For Secret Santa. For little surprises. For each other.</p>
 </div></header>
 <main class="page-shell family-shell">
+<section id="draw" class="draw-section" aria-labelledby="draw-heading">
+<div class="draw-copy"><p class="eyebrow">01 / Secret Santa</p><h2 id="draw-heading">Your draw is sealed.</h2><p>Choose your name and enter the private code Alex sent you. Only your person will be revealed.</p><div class="draw-trust"><span aria-hidden="true">✦</span> One giver. One person. No peeking.</div></div>
+<div class="draw-envelope">
+<div class="envelope-mark" aria-hidden="true">A</div><p class="envelope-kicker">Christmas 2026</p><h3>Open your envelope</h3>
+<form id="draw-form" autocomplete="off">
+<label for="draw-person">Your name</label><select id="draw-person" name="person" required><option value="">Choose your name</option></select>
+<label for="draw-code">Private code</label><input id="draw-code" name="code" type="password" maxlength="20" spellcheck="false" autocomplete="one-time-code" placeholder="XXXX-XXXX-XXXX" required>
+<p id="draw-status" class="draw-status" role="status"></p><button id="open-draw" class="submit-button" type="submit">Reveal my person</button>
+</form>
+<div id="draw-result" class="draw-result" hidden><p>You’re shopping for</p><strong id="draw-recipient"></strong><button id="recipient-list" class="recipient-link" type="button">See their wishlist →</button><button id="close-draw" class="draw-reset" type="button">Seal it again</button></div>
+</div>
+</section>
 <section id="family" aria-labelledby="family-heading">
-<div class="section-heading"><div><p class="eyebrow">01 / Our people</p><h2 id="family-heading">Someone you love.</h2></div><p>Pick a name. Find a little inspiration.</p></div>
+<div class="section-heading"><div><p class="eyebrow">02 / Our people</p><h2 id="family-heading">Someone you love.</h2></div><p>Pick a name. Find a little inspiration.</p></div>
 <nav id="people" class="people-grid" aria-label="Family wishlists"></nav>
 </section>
 <section id="wishlist" class="wishlist-section" aria-labelledby="list-title">
-<div class="section-heading list-heading"><div><p class="eyebrow">02 / Little wishes</p><h2 id="list-title">Alex’s wishlist</h2></div>
+<div class="section-heading list-heading"><div><p class="eyebrow">03 / Little wishes</p><h2 id="list-title">Alex’s wishlist</h2></div>
 <div class="list-tools"><label for="sort">Sort by</label><select id="sort"><option value="price">Price: low to high</option><option value="price-desc">Price: high to low</option></select><button class="small-button" id="refresh" type="button">Refresh</button><button class="small-button primary" type="button" data-add>Add a gift +</button></div></div>
 <p id="load-status" class="load-status" role="status">Loading everyone’s ideas…</p>
 <p class="price-note">Listed prices may change. Check the shop for the latest price.</p>

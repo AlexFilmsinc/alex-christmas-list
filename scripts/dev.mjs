@@ -5,6 +5,10 @@ const root = resolve('dist');
 const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.json': 'application/json', '.jpg': 'image/jpeg', '.png': 'image/png' };
 http.createServer(async (req, res) => {
   const path = new URL(req.url, 'http://localhost').pathname;
+  if (path === '/api/secret-santa') {
+    res.writeHead(503, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+    return res.end(JSON.stringify({ error: 'Private draws open on the live website after deployment.' }));
+  }
   if (path === '/api/gifts') {
     if (req.method !== 'GET') { res.writeHead(503, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify({ error: 'Local preview only. Submit gifts on the live website.' })); }
     try {

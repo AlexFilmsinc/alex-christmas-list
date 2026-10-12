@@ -3,13 +3,26 @@ import assert from 'node:assert/strict';
 import { randomUUID, randomBytes } from 'node:crypto';
 import { validateGift, family } from '../lib/family.js';
 import { createWishlistService } from '../lib/wishlist-service.js';
+import { accessCodeFor, assignmentsFor, revealRecipient } from '../lib/secret-santa.js';
 const input = () => ({ id: randomUUID(), receipt: randomBytes(32).toString('hex'), person: 'mami', title: 'Sweater', url: 'https://example.com/gift?a=1&b=2', notes: 'Medium', price: '' });
-test('eleven family members and optional price with exact link preserved', () => {
-  assert.equal(family.length, 11);
+test('ten participating family members and optional price with exact link preserved', () => {
+  assert.equal(family.length, 10);
+  assert.equal(family.some(person => person.id === 'ito-hector'), false);
   assert.equal(family.find(person => person.id === 'chris').name, 'Chris');
   assert.equal(validateGift({ ...input(), person: 'chris' }).person, 'chris');
   const raw = input(), gift = validateGift(raw);
   assert.equal(gift.price, null); assert.equal(gift.url, raw.url);
+});
+test('secret santa includes everyone once, excludes self, and reveals only with the matching private code', () => {
+  const secret = 'test-secret-that-never-leaves-the-test-suite';
+  const assignments = assignmentsFor(secret);
+  assert.equal(assignments.size, family.length);
+  assert.equal(new Set([...assignments.values()].map(person => person.id)).size, family.length);
+  for (const person of family) {
+    assert.notEqual(assignments.get(person.id).id, person.id);
+    assert.deepEqual(revealRecipient(person.id, accessCodeFor(person.id, secret), secret), assignments.get(person.id));
+    assert.equal(revealRecipient(person.id, 'WRONG-CODE', secret), null);
+  }
 });
 test('reject unknown people, executable URLs, invalid prices and large notes', () => {
   for (const fields of [{ person: 'stranger' }, { url: 'javascript:alert(1)' }, { price: -3 }, { notes: 'x'.repeat(1201) }, { id: '../escape' }]) assert.throws(() => validateGift({ ...input(), ...fields }));
